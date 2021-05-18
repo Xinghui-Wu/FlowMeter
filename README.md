@@ -10,6 +10,11 @@ OS: Windows 10
 
     pip install -r requirements.txt
 
+&emsp;&emsp;在Windows平台下，为了保证能够进行流量抓取，还需要安装WinPcap。
+
+&emsp;&emsp;Npcap是Windows的Nmap项目的数据包嗅探（和发送）库。它基于已停产的WinPcap库，但具有提高的速度，可移植性，安全性和效率。
+
+    https://nmap.org/npcap/dist/npcap-1.31.exe
 
 ## Django项目启动
 
