@@ -21,6 +21,11 @@ import flow
 from . import views
 
 urlpatterns = [
-    path('', views.flow),
-    path('select/', views.select_device)
+    path('', views.flow_view),
+    path('select/', views.select_device),
+    path('sniff/', views.sniff),
+    path('get_flow/', views.get_flow),
+    path('address/', views.address_analise),
+    path('name/', views.name_analise),
+    path('burst/', views.burst_analise)
 ]

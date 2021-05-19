@@ -42,4 +42,24 @@
     }
 </script>
 <p id="result"></p>
+<button onclick="actions()">sniff</button>
+<script>
+    function actions() {
+        setInterval(sniff, 1000)
+    }
+    function sniff() {
+        $.ajax({
+            url:"/flow/sniff/",
+            type:"GET",
+            success:function (data) {
+                let data_obj = JSON.parse(data);
+                $("#num").text(data_obj["num"])
+            },
+            error:function () {
+                alert('Error.')
+            }
+        })
+    }
+</script>
+<p id="num"></p>
 </html>
