@@ -8,18 +8,20 @@ class device(models.Model):
 
 
 class flow(models.Model):
-    src = models.GenericIPAddressField(db_index=True)
-    dst = models.GenericIPAddressField(db_index=True)
+    src = models.GenericIPAddressField()
+    dst = models.GenericIPAddressField()
     time = models.DateTimeField()
     size = models.PositiveIntegerField()
-    address = models.CharField(max_length=64)
-    app = models.CharField(max_length=256)
 
 
 class connection(models.Model):
-    src = models.GenericIPAddressField(db_index=True)
-    dst = models.GenericIPAddressField(db_index=True)
+    src = models.GenericIPAddressField()
+    dst = models.GenericIPAddressField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     all_size = models.PositiveIntegerField()
-    status = models.BooleanField()
+    status = models.BooleanField(db_index=True)
+    address = models.CharField(max_length=64, db_index=True)
+    app = models.CharField(max_length=256, db_index=True)
+    upload = models.BooleanField(db_index=True)
+    download = models.BooleanField(db_index=True)
