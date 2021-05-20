@@ -25,7 +25,7 @@ urlpatterns = [
     path('select/', views.select_device),
     path('sniff/', views.sniff),
     path('get_flow/', views.get_flow),
-    path('address/', views.address_analise),
-    path('name/', views.name_analise),
-    path('burst/', views.burst_analise)
+    path('address/', views.address_analyze),
+    path('name/', views.name_analyze),
+    path('burst/', views.burst_analyze)
 ]
