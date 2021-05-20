@@ -12,6 +12,8 @@ class flow(models.Model):
     dst = models.GenericIPAddressField()
     time = models.DateTimeField()
     size = models.PositiveIntegerField()
+    upload = models.BooleanField(db_index=True)
+    download = models.BooleanField(db_index=True)
 
 
 class connection(models.Model):
