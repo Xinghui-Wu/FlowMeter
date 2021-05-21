@@ -51,9 +51,11 @@ class Sniffer:
             download = True
         # Save flow.
         flow_item = flow(src=src, dst=dst, time=time, size=size, upload=upload, download=download)
+        self.lock.acquire()
         flow_item.save()
         # Check connection.
         connections = connection.objects.filter(src=src, dst=dst, status=True).order_by('start_time')
+        self.lock.release()
         if connections.exists():
             # Check whether the number of connection is more than one.
             num = connections.count()

@@ -33,7 +33,7 @@
             },
             success:function (data) {
                 let data_obj = JSON.parse(data);
-                $("#result").text(data_obj["index"])
+                $("#device_id").text(data_obj["index"])
             },
             error:function () {
                 alert('Error.')
@@ -41,19 +41,21 @@
         })
     }
 </script>
-<p id="result"></p>
-<button onclick="actions()">sniff</button>
+<p id="device_id"></p>
+<button onclick="test()">test</button>
 <script>
-    function actions() {
-        setInterval(sniff, 1000)
-    }
-    function sniff() {
+    function test() {
         $.ajax({
-            url:"/flow/sniff/",
+            url:"/flow/burst/",
             type:"GET",
             success:function (data) {
                 let data_obj = JSON.parse(data);
-                $("#num").text(data_obj["num"])
+                {#$("#result1").text(data_obj["upload"])#}
+                {#$("#result2").text(data_obj["download"])#}
+                {#$("#result3").text(data_obj["upload_now"])#}
+                {#$("#result4").text(data_obj["download_now"])#}
+                {#$("#result5").text(data_obj["upload_history"])#}
+                {#$("#result6").text(data_obj["download_history"])#}
             },
             error:function () {
                 alert('Error.')
@@ -61,5 +63,10 @@
         })
     }
 </script>
-<p id="num"></p>
+<p id="result1"></p>
+<p id="result2"></p>
+<p id="result3"></p>
+<p id="result4"></p>
+<p id="result5"></p>
+<p id="result6"></p>
 </html>
