@@ -1,0 +1,50 @@
+body {
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.header {
+    height: 60px;
+    line-height: 60px;
+    background-color: #32343a;
+}
+
+.header a {
+    margin-left: 100px;
+    margin-right: 25px;
+    font-size: xx-large;
+    color: white;
+}
+
+#device {
+    height: 150px;
+}
+
+#traffic {
+    height: 700px;
+}
+
+#traffic-display {
+    float: left;
+    height: 100%;
+    width: 60%;
+}
+
+#traffic-chart {
+    height: 50%;
+    width: 100%;
+}
+
+#traffic-analysis {
+    float: right;
+    height: 100%;
+    width: 40%;
+}
+
+.footer {
+    height: 60px;
+    background-color: #32343a;
+    text-align: center;
+    line-height: 60px;
+    font-size: small;
+    color: #ffffff;
+}
