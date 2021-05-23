@@ -10,63 +10,71 @@
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/flow.css">
+    <script src="/static/js/flow.js"></script>
 </head>
 
 <body>
-<h1>Flow</h1>
+    <div class="header">
+        <a href="/">Flow</a>
+    </div>
+
+    <div id="content" class="container">
+        <!-- 网络设备选择及功能按钮 -->
+        <div id="device">
+            <p>请选择网络设备</p>
+            <hr>
+            <form>
+                <select id="device-index" onchange="selectDevice()">
+                    {% for device in device_list %}
+                    <option value="{{ device.index }}">{{ device.description }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <!-- 网络流量 -->
+        <div id="traffic">
+            <!-- 流量数据展示 -->
+            <div id="traffic-display">
+                <div id="traffic-chart"></div>
+
+                <div id="traffic-values">
+                    <span>实时下载：</span>
+                    <span id="real-time-download">1</span>
+                    <span>实时上传：</span>
+                    <span id="real-time-upload">2</span>
+                    <span>历史下载：</span>
+                    <span id="history-download">3</span>
+                    <span>历史上传：</span>
+                    <span id="history-upload">4</span>
+                </div>
+            </div>
+
+            <!-- 流量数据分析 -->
+            <div id="traffic-analysis">
+                <span>地点分析</span>
+                <span>地点图</span>
+                <span>域名分析</span>
+                <span>性质分析</span>
+                <span>突发流量分析</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        高等计算机网络与通信 2021
+        &emsp;&emsp;&emsp;&emsp;
+        开发者：林欣、吴星辉
+    </div>
+
+    <script>
+        setFullScreen();
+        plotRealTimeTrafficChart();
+    </script>
 </body>
-<form>
-    <select id="device_index">
-        {% for device in device_list %}
-            <option value="{{ device.index }}">{{ device.description }}</option>
-        {% endfor %}
-    </select>
-    <p><input type="button" value="select" onclick="select_device()"></p>
-</form>
-<script>
-    function select_device() {
-        $.ajax({
-            url:"/flow/select/",
-            type:"GET",
-            data:{
-                "device_index":$("#device_index").val()
-            },
-            success:function (data) {
-                let data_obj = JSON.parse(data);
-                $("#device_id").text(data_obj["index"])
-            },
-            error:function () {
-                alert('Error.')
-            }
-        })
-    }
-</script>
-<p id="device_id"></p>
-<button onclick="test()">test</button>
-<script>
-    function test() {
-        $.ajax({
-            url:"/flow/burst/",
-            type:"GET",
-            success:function (data) {
-                let data_obj = JSON.parse(data);
-                {#$("#result1").text(data_obj["upload"])#}
-                {#$("#result2").text(data_obj["download"])#}
-                {#$("#result3").text(data_obj["upload_now"])#}
-                {#$("#result4").text(data_obj["download_now"])#}
-                {#$("#result5").text(data_obj["upload_history"])#}
-                {#$("#result6").text(data_obj["download_history"])#}
-            },
-            error:function () {
-                alert('Error.')
-            }
-        })
-    }
-</script>
-<p id="result1"></p>
-<p id="result2"></p>
-<p id="result3"></p>
-<p id="result4"></p>
-<p id="result5"></p>
-<p id="result6"></p>
+
 </html>
