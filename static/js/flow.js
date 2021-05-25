@@ -168,7 +168,7 @@ function sortDict(dict) {
 */
 function plotRealTimeTrafficChart() {
     var base = +new Date();
-    var interval = 1 * 1000;
+    var interval = 2 * 1000;
 
     var time = [];
     var download = [];

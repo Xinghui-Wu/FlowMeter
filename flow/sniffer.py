@@ -1,5 +1,6 @@
 from scapy.all import *
-from scapy.layers.inet import IP
+from scapy.layers.http import HTTP
+from scapy.layers.inet import IP, TCP, UDP
 from django.utils import timezone
 import ipdb
 
@@ -28,6 +29,9 @@ class Sniffer:
                 self.ips.append(self.device.ip)
             # print(self.ips)
             self.initial_flow_table()
+            return True
+        else:
+            return False
 
     def is_localhost(self, ip):
         if ip in self.ips:
@@ -55,11 +59,11 @@ class Sniffer:
         flow_item.save()
         # Check connection.
         connections = connection.objects.filter(src=src, dst=dst, status=True).order_by('start_time')
-        self.lock.release()
         if connections.exists():
             # Check whether the number of connection is more than one.
             num = connections.count()
             connection_final = connections.first()
+            self.lock.release()
             if num > 1:
                 connection_final.all_size = 0
                 for connection_item in connections:
@@ -78,6 +82,7 @@ class Sniffer:
                 connections.update(end_time=new_end_time, all_size=new_all_size)
                 self.lock.release()
         else:
+            self.lock.release()
             # Create new connection.
             # address
             address_query = dst
@@ -91,6 +96,18 @@ class Sniffer:
                 address = address_result[1]
             # app
             app = ip_packet.proto
+            if ip_packet.haslayer(TCP):
+                tcp_packet = ip_packet[TCP]
+                if upload:
+                    app = tcp_packet.sport
+                elif download:
+                    app = tcp_packet.dport
+            elif ip_packet.haslayer(UDP):
+                udp_packet = ip_packet[UDP]
+                if upload:
+                    app = udp_packet.sport
+                elif download:
+                    app = udp_packet.dport
             # Save connection.
             connection_item = connection(src=src, dst=dst, start_time=time, end_time=time, all_size=size, status=True,
                                          address=address, app=app, upload=upload, download=download)
