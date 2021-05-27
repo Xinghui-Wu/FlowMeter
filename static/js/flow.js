@@ -1,18 +1,49 @@
-/*
-* 页面铺满屏幕
-*/
-$(document).ready(function () {
-    var screenHeight = document.documentElement.clientHeight;
-    var contentHeight = screenHeight - 60 - 60;
-    document.getElementById("content").style.height = contentHeight + "px";
-});
-
-
 // 是否开始监听标记
 var start = false;
 // 实时下载、上传速度
 var downloadNow = 0;
 var uploadNow = 0;
+
+
+$(document).ready(function () {
+    // 页面铺满屏幕
+    var screenHeight = document.documentElement.clientHeight;
+    var contentHeight = screenHeight - 60 - 60;
+    document.getElementById("content").style.height = contentHeight + "px";
+
+    // 生成分析结果展示表格
+    generateTable("address-analysis", 5, 3);
+    generateTable("name-analysis", 5, 3);
+    generateTable("burst-analysis", 3, 5)
+});
+
+
+/*
+* 创建表格主体部分
+*/
+function generateTable(tableID, num_rows, num_columns) {
+    var table = document.getElementById(tableID);
+    var tbody = document.createElement('tbody');
+
+    for (var i = 0; i < num_rows; i++) {
+        var row = document.createElement('tr');
+
+        var column = document.createElement('th')
+        column.setAttribute("style", "vertical-align: middle;");
+        column.innerText = i + 1;
+        row.appendChild(column)
+
+        for (var j = 0; j < num_columns - 1; j++) {
+            var column = document.createElement('td');
+            column.setAttribute("style", "vertical-align: middle;");
+            row.appendChild(column);
+        }
+
+        tbody.appendChild(row);
+    }
+
+    table.appendChild(tbody);
+}
 
 
 /*
@@ -76,8 +107,7 @@ function analyzeAddresses() {
             var topDownloadAddresses = sortDict(results["download"]);
             var topUploadAddresses = sortDict(results["upload"]);
 
-            $("#top-download-addresses").text(topDownloadAddresses);
-            $("#top-upload-addresses").text(topUploadAddresses);
+            changeTableValues("address-analysis", topDownloadAddresses, topUploadAddresses);
         },
         error: function () {
             alert('Error: analyzeAddresses')
@@ -87,7 +117,7 @@ function analyzeAddresses() {
 
 
 /*
-* 域名分析
+* 端口分析
 */
 function analyzeNames() {
     $.ajax({
@@ -100,8 +130,7 @@ function analyzeNames() {
             var topDownloadNames = sortDict(results["download"]);
             var topUploadNames = sortDict(results["upload"]);
 
-            $("#top-download-names").text(topDownloadNames);
-            $("#top-upload-names").text(topUploadNames);
+            changeTableValues("name-analysis", topDownloadNames, topUploadNames);
         },
         error: function () {
             alert('Error: analyzeNames')
@@ -120,11 +149,31 @@ function analyzeBurst() {
         data: {
         },
         success: function (data) {
-            alert(data)
             var results = JSON.parse(data);
-            var topBurst = sortDict(results["burst"]);
+            var burst = results["burst"];
 
-            $("#top-burst").text(topBurst);
+            var table = document.getElementById("burst-analysis");
+
+            for (var i = 0; i < 3; i++) {
+                values = burst[String(i)];
+                
+                if (typeof values != "undefined") {
+                    table.rows[i + 1].cells[1].innerText = values[0];
+                    table.rows[i + 1].cells[2].innerText = values[1];
+                    if (values[7] == "True") {
+                        table.rows[i + 1].cells[3].innerText = "下载";
+                    }
+                    else {
+                        table.rows[i + 1].cells[3].innerText = "上传";
+                    }
+                    table.rows[i + 1].cells[4].innerText = values[2];
+                }
+                else {
+                    for (var j = 1; j < 5; j++) {
+                        table.rows[i + 1].cells[j].innerText = "";
+                    }
+                }
+            }
         },
         error: function () {
             alert('Error: analyzeBurst')
@@ -137,13 +186,15 @@ function analyzeBurst() {
 * 根据字典的值对键进行排序
 */
 function sortDict(dict) {
+    var sortedKeys = [];
+
     var top = 5;
-    if (top > dict.length) {
-        top = dic.length;
+
+    var keys = Object.keys(dict);
+    if (top > keys.length) {
+        top = keys.length;
     }
 
-    var sortedKeys = [];
-    
     for (var i = 0; i < top; i++) {
         var maxKey;
         var max = 0;
@@ -159,7 +210,25 @@ function sortDict(dict) {
         delete dict[maxKey];
     }
 
+    for (var i = 0; i < 5 - top; i++) {
+        sortedKeys.push("")
+    }
+
     return sortedKeys;
+}
+
+
+/*
+* 改变表格单元格内容
+*/
+function changeTableValues(tableID, downloadList, uploadList) {
+    var table = document.getElementById(tableID);
+    for (var i = 1; i < table.rows.length; i++) {
+        for (var j = 0; j < table.rows[0].cells.length; j++) {
+            table.rows[i].cells[1].innerText = downloadList[i - 1];
+            table.rows[i].cells[2].innerText = uploadList[i - 1];
+        }
+    }
 }
 
 
@@ -187,7 +256,7 @@ function plotRealTimeTrafficChart() {
             }
         }
         now = now.join(":")
-        
+
         // 从后端更新流量数据
         getFlowData();
         // 从后端更新地址分析结果
@@ -195,7 +264,7 @@ function plotRealTimeTrafficChart() {
         // 从后端更新域名分析结果
         analyzeNames();
         // 从后端更新突发流量分析结果
-        // analyzeBurst();
+        analyzeBurst();
 
         // 列表加入新数据
         time.push(now);
