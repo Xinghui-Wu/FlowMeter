@@ -71,39 +71,41 @@
             <!-- 流量数据分析 -->
             <div id="traffic-analysis">
                 <div>
-                    <span>地点分析</span>
-                    <div>
-                        <span>top下载地址：</span>
-                        <span id="top-download-addresses"></span>
-                    </div>
-                    <div>
-                        <span>top上传地址：</span>
-                        <span id="top-upload-addresses"></span>
-                    </div>
+                    <table id="address-analysis" class="table table-bordered table-sm" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>地点分析</th>
+                                <th>top下载地址</th>
+                                <th>top上传地址</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
+
                 <div>
-                    <span>地点图</span>
+                    <table id="name-analysis" class="table table-bordered table-sm" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>端口分析</th>
+                                <th>top下载端口</th>
+                                <th>top上传端口</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
+
                 <div>
-                    <span>域名分析</span>
-                    <div>
-                        <span>top下载域名：</span>
-                        <span id="top-download-names"></span>
-                    </div>
-                    <div>
-                        <span>top上传域名：</span>
-                        <span id="top-upload-names"></span>
-                    </div>
-                </div>
-                <div>
-                    <span>性质分析</span>
-                </div>
-                <div>
-                    <span>突发流量分析</span>
-                    <div>
-                        <span>top突发流量：</span>
-                        <span id="top-burst"></span>
-                    </div>
+                    <table id="burst-analysis" class="table table-bordered table-sm" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th style="vertical-align: middle;">突发流量分析</th>
+                                <th style="vertical-align: middle;">源IP地址</th>
+                                <th style="vertical-align: middle;">目的IP地址</th>
+                                <th style="vertical-align: middle;">下载/上传</th>
+                                <th style="vertical-align: middle;">流量大小</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
