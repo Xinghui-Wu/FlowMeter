@@ -19,21 +19,21 @@
 
 <body>
     <div class="header">
-        <a href="/">Flow</a>
+        <a href="/">FlowMeter</a>
     </div>
 
-    <div id="content" class="container">
+    <div id="content" class="container-fluid">
         <!-- 网络设备选择 -->
         <div id="device">
-            <p>请选择网络设备</p>
-            <hr>
             <form>
                 <select id="device-index" onchange="selectDevice()">
+                    <option value="-1">请选择网络设备</option>
                     {% for device in device_list %}
                     <option value="{{ device.index }}">{{ device.description }}</option>
                     {% endfor %}
                 </select>
             </form>
+            <hr>
         </div>
 
         <!-- 网络流量 -->
@@ -45,22 +45,14 @@
 
                 <!-- 流量数据值 -->
                 <div id="traffic-values">
-                    <div>
-                        <span>实时下载速度：</span>
-                        <span id="real-time-download">0</span>
-                        <span>B/s</span>
-                    </div>
-                    <div>
-                        <span>实时上传速度：</span>
-                        <span id="real-time-upload">0</span>
-                        <span>B/s</span>
-                    </div>
-                    <div>
+                    <div id="real-time-download-dashboard" class="dashboard"></div>
+                    <div id="real-time-upload-dashboard" class="dashboard"></div>
+                    <div class="history">
                         <span>历史下载总量：</span>
                         <span id="history-download">0</span>
                         <span>B</span>
                     </div>
-                    <div>
+                    <div class="history">
                         <span>历史上传总量：</span>
                         <span id="history-upload">0</span>
                         <span>B</span>
@@ -71,7 +63,7 @@
             <!-- 流量数据分析 -->
             <div id="traffic-analysis">
                 <div>
-                    <table id="address-analysis" class="table table-bordered table-sm" style="text-align: center;">
+                    <table id="address-analysis" class="table table-dark table-striped table-sm" style="text-align: center;">
                         <thead>
                             <tr>
                                 <th>地点分析</th>
@@ -83,7 +75,7 @@
                 </div>
 
                 <div>
-                    <table id="name-analysis" class="table table-bordered table-sm" style="text-align: center;">
+                    <table id="name-analysis" class="table table-dark table-striped table-sm" style="text-align: center;">
                         <thead>
                             <tr>
                                 <th>端口分析</th>
@@ -95,7 +87,7 @@
                 </div>
 
                 <div>
-                    <table id="burst-analysis" class="table table-bordered table-sm" style="text-align: center;">
+                    <table id="burst-analysis" class="table table-dark table-striped table-sm" style="text-align: center;">
                         <thead>
                             <tr>
                                 <th style="vertical-align: middle;">突发流量分析</th>
