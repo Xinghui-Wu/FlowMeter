@@ -8,7 +8,7 @@ var uploadNow = 0;
 $(document).ready(function () {
     // 页面铺满屏幕
     var screenHeight = document.documentElement.clientHeight;
-    var contentHeight = screenHeight - 60 - 60;
+    var contentHeight = screenHeight - 60 - 60 - 20;
     document.getElementById("content").style.height = contentHeight + "px";
 
     // 生成分析结果展示表格
@@ -50,6 +50,10 @@ function generateTable(tableID, num_rows, num_columns) {
 * 选择设备
 */
 function selectDevice() {
+    if ($("#device-index").val() == -1) {
+        alert("请选择网络设备")
+        return
+    }
     $.ajax({
         url: "select/",
         type: "GET",
@@ -78,8 +82,6 @@ function getFlowData() {
         success: function (data) {
             var results = JSON.parse(data);
 
-            $("#real-time-download").text(results["download_now"]);
-            $("#real-time-upload").text(results["upload_now"]);
             $("#history-download").text(results["download_history"]);
             $("#history-upload").text(results["upload_history"]);
 
@@ -156,7 +158,7 @@ function analyzeBurst() {
 
             for (var i = 0; i < 3; i++) {
                 values = burst[String(i)];
-                
+
                 if (typeof values != "undefined") {
                     table.rows[i + 1].cells[1].innerText = values[0];
                     table.rows[i + 1].cells[2].innerText = values[1];
@@ -280,7 +282,7 @@ function plotRealTimeTrafficChart() {
     }
 
     // Echarts设置
-    option = {
+    lineOption = {
         title: {
             text: "实时流量"
         },
@@ -314,6 +316,118 @@ function plotRealTimeTrafficChart() {
         ]
     };
 
+    var downloadDashboardOption;
+    downloadDashboardOption = {
+        title: {
+            text: "实时下载速度",
+            left: 'center'
+        },
+        series: [{
+            type: 'gauge',
+            axisLine: {
+                lineStyle: {
+                    width: 10,
+                    color: [
+                        [0.3, '#67e0e3'],
+                        [0.7, '#37a2da'],
+                        [1, '#fd666d']
+                    ]
+                }
+            },
+            pointer: {
+                itemStyle: {
+                    color: 'auto'
+                }
+            },
+            axisTick: {
+                distance: -30,
+                length: 8,
+                lineStyle: {
+                    color: '#fff',
+                    width: 2
+                }
+            },
+            splitLine: {
+                distance: -30,
+                length: 30,
+                lineStyle: {
+                    color: '#fff',
+                    width: 4
+                }
+            },
+            axisLabel: {
+                color: 'auto',
+                distance: -15,
+                fontSize: 10
+            },
+            detail: {
+                valueAnimation: true,
+                formatter: '{value} B/s',
+                color: 'auto',
+                fontSize: 15
+            },
+            data: [{
+                value: 0
+            }]
+        }]
+    };
+
+    var uploadDashboardOption;
+    uploadDashboardOption = {
+        title: {
+            text: "实时上传速度",
+            left: 'center'
+        },
+        series: [{
+            type: 'gauge',
+            axisLine: {
+                lineStyle: {
+                    width: 10,
+                    color: [
+                        [0.3, '#67e0e3'],
+                        [0.7, '#37a2da'],
+                        [1, '#fd666d']
+                    ]
+                }
+            },
+            pointer: {
+                itemStyle: {
+                    color: 'auto'
+                }
+            },
+            axisTick: {
+                distance: -30,
+                length: 8,
+                lineStyle: {
+                    color: '#fff',
+                    width: 2
+                }
+            },
+            splitLine: {
+                distance: -30,
+                length: 30,
+                lineStyle: {
+                    color: '#fff',
+                    width: 4
+                }
+            },
+            axisLabel: {
+                color: 'auto',
+                distance: -15,
+                fontSize: 10
+            },
+            detail: {
+                valueAnimation: true,
+                formatter: '{value} B/s',
+                color: 'auto',
+                fontSize: 15
+            },
+            data: [{
+                value: 0
+            }]
+        }]
+    };
+
     // 设置更新时间间隔
     setInterval(function () {
         if (start) {
@@ -334,9 +448,19 @@ function plotRealTimeTrafficChart() {
                 }
             ]
         });
+
+        downloadDashboardOption.series[0].data[0].value = downloadNow;
+        downloadDashboard.setOption(downloadDashboardOption, true);
+
+        uploadDashboardOption.series[0].data[0].value = uploadNow;
+        uploadDashboard.setOption(uploadDashboardOption, true);
     }, interval);
 
     // 基于准备好的DOM，初始化Echarts实例
-    var trafficChart = echarts.init(document.getElementById('traffic-chart'));
-    trafficChart.setOption(option)
+    var trafficChart = echarts.init(document.getElementById("traffic-chart"));
+    trafficChart.setOption(lineOption);
+    var downloadDashboard = echarts.init(document.getElementById("real-time-download-dashboard"));
+    downloadDashboard.setOption(downloadDashboardOption);
+    var uploadDashboard = echarts.init(document.getElementById("real-time-upload-dashboard"));
+    uploadDashboard.setOption(uploadDashboardOption);
 }
